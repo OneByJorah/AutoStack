@@ -18,6 +18,9 @@ services:
       ENABLE_SETUP_API: "${ENABLE_SETUP_API:-false}"
     volumes:
       - ./noc-dashboard/templates:/app/templates:ro
+      - ./:/workspace:rw
+      - ~/.cloudflared:/cloudflared:ro
+      - /var/run/docker.sock:/var/run/docker.sock
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:9500/api/healthz || exit 1"]
       interval: 15s

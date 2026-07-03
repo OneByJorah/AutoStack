@@ -85,6 +85,6 @@ cd "$REPO_ROOT"
 sudo docker compose up -d
 
 echo "Running healthcheck..."
-bash "$REPO_DIR/scripts/healthcheck.sh" || true
+bash "$REPO_ROOT/scripts/healthcheck.sh" || true
 
 echo "Done. Profile: $MODE"

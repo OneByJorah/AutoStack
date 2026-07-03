@@ -225,28 +225,100 @@ app.mount("/", StaticFiles(directory="/app/static", html=True), name="static")
 
 
 if os.getenv("ENABLE_SETUP_API", "0").lower() in ("1", "true", "yes", "on"):
+    import json
+    import os
+    import subprocess
+    import datetime
+    from pathlib import Path
+
     from fastapi import Request
     from fastapi.templating import Jinja2Templates
 
     templates = Jinja2Templates(directory="/app/templates")
+
+    REPO_ROOT = Path("/workspace")
+    CF_DIR = Path("/cloudflared")
+    COMPOSE_FILE = REPO_ROOT / "docker-compose.yml"
 
     @app.get("/setup")
     async def setup_page(request: Request):
         return templates.TemplateResponse("setup.html", {"request": request})
 
     @app.post("/api/setup")
-    async def apply_setup(payload: dict):
-        mode = payload.get("mode", "local")
-        cf_host = payload.get("cloudflare_hostname", "")
-        cf_tunnel = payload.get("cloudflare_tunnel", "")
-        token = payload.get("honcho_token", "")
+    async def apply_setup(request: Request):
+        body = await request.json()
+        mode = str(body.get("mode", "local")).strip()
+        cf_host = str(body.get("cloudflare_hostname", "")).strip()
+        cf_tunnel = str(body.get("cloudflare_tunnel", "")).strip()
+        honcho_token = str(body.get("honcho_token", "")).strip()
+        llm_key = str(body.get("llm_key", "")).strip()
 
-        profile = f"/profiles/{mode}/.env"
-        # safe write example
-        return {
-            "ok": True,
-            "applied_mode": mode,
+        if mode not in {"local", "tailscale", "cloudflare", "all"}:
+            return {"ok": False, "error": "Invalid mode"}
+
+        profile = REPO_ROOT / "profiles" / mode / ".env"
+        if not profile.exists():
+            return {"ok": False, "error": f"Missing profile: {profile}"}
+
+        payload = {
+            "mode": mode,
             "cloudflare_hostname": cf_host,
             "cloudflare_tunnel": cf_tunnel,
-            "note": "In production this would rewrite .env, restart cloudflared, and restart docker compose."
+            "honcho_token": honcho_token,
+            "llm_key": llm_key,
+            "applied_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         }
+
+        try:
+            profile_text = profile.read_text()
+            target_env = REPO_ROOT / ".env"
+            target_env.write_text(profile_text + "\n")
+
+            if honcho_token:
+                target_env.write_text(target_env.read_text() + f"\nHONCHO_TOKEN={honcho_token}\n")
+            if llm_key:
+                target_env.write_text(target_env.read_text() + f"\nLLM_API_KEY={llm_key}\n")
+
+            (REPO_ROOT / "setup-complete.json").write_text(json.dumps(payload, indent=2))
+
+            if mode in ("cloudflare", "all") and cf_host and cf_tunnel:
+                cf_content = f"""tunnel: {cf_tunnel}\ncredentials-file: /home/j1admin/.cloudflared/{cf_tunnel}.json\ningress:\n  - hostname: {cf_host}\n    path: /honcho/*\n    service: http://100.66.142.21:8000\n  - hostname: {cf_host}\n    path: /qdrant/*\n    service: http://100.66.142.21:6333\n  - hostname: {cf_host}\n    path: /search/*\n    service: http://100.66.142.21:8080\n  - hostname: {cf_host}\n    path: /obsidian/*\n    service: http://100.66.142.21:8083\n  - hostname: {cf_host}\n    path: /costforge/*\n    service: http://100.66.142.21:8090\n  - hostname: {cf_host}\n    path: /noc/*\n    service: http://100.66.142.21:9500\n  - service: http_status:404\n"""
+                CF_DIR.mkdir(parents=True, exist_ok=True)
+                (CF_DIR / "config.yml").write_text(cf_content)
+
+            apply_cmd = "bash scripts/apply-setup.sh"
+            docker_socket = Path("/var/run/docker.sock")
+            if docker_socket.exists():
+                try:
+                    proc = subprocess.run(
+                        ["bash", "/workspace/scripts/apply-setup.sh"],
+                        capture_output=True,
+                        text=True,
+                        timeout=180,
+                    )
+                    return {
+                        "ok": proc.returncode == 0,
+                        "mode": mode,
+                        "apply_cmd": apply_cmd,
+                        "stdout": proc.stdout,
+                        "stderr": proc.stderr,
+                        "returncode": proc.returncode,
+                    }
+                except Exception as exc:
+                    return {
+                        "ok": False,
+                        "mode": mode,
+                        "apply_cmd": apply_cmd,
+                        "error": str(exc),
+                        "note": "Setup files were written. Run the apply command on the host.",
+                    }
+            else:
+                return {
+                    "ok": True,
+                    "mode": mode,
+                    "apply_cmd": apply_cmd,
+                    "note": "Config written. Run the apply command on the host to restart services.",
+                }
+        except Exception as exc:
+            return {"ok": False, "error": str(exc)}
+

@@ -36,21 +36,43 @@
     <label for="honcho_token">Honcho token</label>
     <input id="honcho_token" type="password" placeholder="Optional" />
 
+    <label for="llm_key">LLM / OpenRouter key</label>
+    <input id="llm_key" type="password" placeholder="Optional" />
+
     <button id="apply">Apply setup</button>
 
-    <div id="result"></div>
+    <pre id="result" style="display:none;white-space:pre-wrap;background:#0b0d10;border:1px solid #272c36;padding:12px;border-radius:8px;margin-top:16px;"></pre>
+
+    <div id="actions" style="display:none;margin-top:12px;">
+      <button id="copy-cmd">Copy apply command</button>
+      <span id="cmd-copied" style="margin-left:8px;opacity:.8;display:none;">Copied</span>
+    </div>
+
+    <p class="hint" style="margin-top:16px;">
+      After applying, run <code>bash scripts/apply-setup.sh</code> on the host if it wasn’t applied automatically.
+      Then verify with <code>bash scripts/healthcheck.sh</code>.
+    </p>
   </div>
 
   <script>
     const el = document.getElementById('apply');
     const out = document.getElementById('result');
+    const actions = document.getElementById('actions');
+    const copyBtn = document.getElementById('copy-cmd');
+    const copied = document.getElementById('cmd-copied');
+    let lastApplyCmd = '';
+
     el.addEventListener('click', async () => {
       out.style.display = 'none';
+      actions.style.display = 'none';
+      out.textContent = 'Applying...';
+      out.style.display = 'block';
       const payload = {
         mode: document.getElementById('mode').value,
         cloudflare_hostname: document.getElementById('cf_host').value.trim(),
         cloudflare_tunnel: document.getElementById('cf_tunnel').value.trim(),
         honcho_token: document.getElementById('honcho_token').value.trim(),
+        llm_key: document.getElementById('llm_key').value.trim(),
       };
       const r = await fetch('/api/setup', {
         method: 'POST',
@@ -60,6 +82,18 @@
       const data = await r.json();
       out.textContent = JSON.stringify(data, null, 2);
       out.style.display = 'block';
+      lastApplyCmd = data.apply_cmd || '';
+      if (lastApplyCmd) {
+        actions.style.display = 'block';
+        copyBtn.textContent = 'Copy: ' + lastApplyCmd;
+      }
+    });
+
+    copyBtn.addEventListener('click', async () => {
+      if (!lastApplyCmd) return;
+      await navigator.clipboard.writeText(lastApplyCmd);
+      copied.style.display = 'inline';
+      setTimeout(() => { copied.style.display = 'none'; }, 1500);
     });
   </script>
 </body>
