@@ -15,6 +15,9 @@ services:
       PORTAINER_URL: "${PORTAINER_URL:-}"
       PORTAINER_API_KEY: "${PORTAINER_API_KEY:-}"
       ENABLE_HEADROOM_MONITORING: "${ENABLE_HEADROOM_MONITORING:-false}"
+      ENABLE_SETUP_API: "${ENABLE_SETUP_API:-false}"
+    volumes:
+      - ./noc-dashboard/templates:/app/templates:ro
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:9500/api/healthz || exit 1"]
       interval: 15s

@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>arah setup</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, sans-serif; background:#0b0d10; color:#e6ecf2; padding:24px; }
+    .card { max-width:720px; margin:0 auto; background:#13161b; padding:20px; border-radius:12px; }
+    h1 { font-size:18px; margin-bottom:12px; }
+    label { display:block; margin-top:10px; font-size:12px; opacity:.9; }
+    input, select { width:100%; padding:10px; background:#0b0d10; border:1px solid #272c36; color:#e6ecf2; border-radius:8px; margin-top:6px; }
+    button { margin-top:16px; padding:10px 14px; background:#2a6fdb; color:white; border:none; border-radius:8px; cursor:pointer; }
+    .hint { opacity:.7; font-size:12px; margin-top:6px; }
+    #result { margin-top:16px; padding:10px; background:#0f1a14; border:1px solid #1f3a28; border-radius:8px; display:none; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>arah setup wizard</h1>
+    <p class="hint">Choose how you want to reach your stack, then apply the env + restart services.</p>
+
+    <label for="mode">Stack mode</label>
+    <select id="mode">
+      <option value="local">Local only</option>
+      <option value="tailscale">Tailscale</option>
+      <option value="cloudflare">Cloudflare Tunnel</option>
+      <option value="all" selected>All (Local + Tailscale + Cloudflare)</option>
+    </select>
+
+    <label for="cf_host">Cloudflare hostname</label>
+    <input id="cf_host" placeholder="arah.example.com" />
+
+    <label for="cf_tunnel">Cloudflare tunnel name</label>
+    <input id="cf_tunnel" placeholder="arah-tunnel" />
+
+    <label for="honcho_token">Honcho token</label>
+    <input id="honcho_token" type="password" placeholder="Optional" />
+
+    <button id="apply">Apply setup</button>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const el = document.getElementById('apply');
+    const out = document.getElementById('result');
+    el.addEventListener('click', async () => {
+      out.style.display = 'none';
+      const payload = {
+        mode: document.getElementById('mode').value,
+        cloudflare_hostname: document.getElementById('cf_host').value.trim(),
+        cloudflare_tunnel: document.getElementById('cf_tunnel').value.trim(),
+        honcho_token: document.getElementById('honcho_token').value.trim(),
+      };
+      const r = await fetch('/api/setup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await r.json();
+      out.textContent = JSON.stringify(data, null, 2);
+      out.style.display = 'block';
+    });
+  </script>
+</body>
+</html>

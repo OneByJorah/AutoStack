@@ -222,3 +222,31 @@ async def healthz():
 
 
 app.mount("/", StaticFiles(directory="/app/static", html=True), name="static")
+
+
+if os.getenv("ENABLE_SETUP_API", "0").lower() in ("1", "true", "yes", "on"):
+    from fastapi import Request
+    from fastapi.templating import Jinja2Templates
+
+    templates = Jinja2Templates(directory="/app/templates")
+
+    @app.get("/setup")
+    async def setup_page(request: Request):
+        return templates.TemplateResponse("setup.html", {"request": request})
+
+    @app.post("/api/setup")
+    async def apply_setup(payload: dict):
+        mode = payload.get("mode", "local")
+        cf_host = payload.get("cloudflare_hostname", "")
+        cf_tunnel = payload.get("cloudflare_tunnel", "")
+        token = payload.get("honcho_token", "")
+
+        profile = f"/profiles/{mode}/.env"
+        # safe write example
+        return {
+            "ok": True,
+            "applied_mode": mode,
+            "cloudflare_hostname": cf_host,
+            "cloudflare_tunnel": cf_tunnel,
+            "note": "In production this would rewrite .env, restart cloudflared, and restart docker compose."
+        }
