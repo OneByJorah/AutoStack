@@ -50,7 +50,7 @@ StackDeploy is a **unified, production-ready Docker Compose deployment** that co
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                    TAILSCALE NETWORK                            │
-│  100.92.150.99 (ollama host)                                    │
+│  ollama host                                    │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -356,7 +356,7 @@ StackDeploy/
 
 ## Screenshots
 
-All screenshots are live captures from the local dev instance (100.92.150.99).
+All screenshots are live captures from the local dev instance (ollama host).
 
 ### Portainer Admin Panel (Port 9000)
 ![Portainer](docs/screenshots/portainer.png)
@@ -434,5 +434,5 @@ MIT
 Built by **Jhonattan L. Jimenez** (J1admin).
 
 - GitHub: [@OneByJorah](https://github.com/OneByJorah)
-- Tailscale: `ollama` (100.92.150.99)
+- Tailscale: `ollama` (ollama host)
 - Primary GPU: RTX 3060 12GB
