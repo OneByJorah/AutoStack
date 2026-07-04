@@ -10,14 +10,13 @@ service still exposes its own port/API directly, exactly as before.
 """
 import asyncio
 import os
-import socket
 import time
 from collections import deque
 from contextlib import asynccontextmanager
 
 import httpx
 from fastapi import FastAPI
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import JSONResponse
 from fastapi.static import StaticFiles
 
 
@@ -212,7 +211,7 @@ async def api_status():
             "ollama_host": os.getenv("OLLAMA_HOST", "ollama"),
             "ollama_port": int(os.getenv("OLLAMA_PORT", "11434")),
             "prod_hosts": os.getenv("PROD_HOSTS", ""),
-        }
+        },
     })
 
 
@@ -225,10 +224,10 @@ app.mount("/", StaticFiles(directory="/app/static", html=True), name="static")
 
 
 if os.getenv("ENABLE_SETUP_API", "0").lower() in ("1", "true", "yes", "on"):
+    import datetime
     import json
     import os
     import subprocess
-    import datetime
     from pathlib import Path
 
     from fastapi import Request

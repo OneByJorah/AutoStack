@@ -1,0 +1,23 @@
+# Dependencies
+__pycache__/
+*.pyc
+.venv/
+venv/
+node_modules/
+# Environment
+.env
+.env.local
+# IDE
+.vscode/
+.idea/
+# OS
+.DS_Store
+Thumbs.db
+# Build
+dist/
+build/
+*.egg-info/
+*.so
+# Logs
+*.log
+profiles/local/.env

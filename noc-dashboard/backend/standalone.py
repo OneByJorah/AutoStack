@@ -5,7 +5,6 @@ for services so health checks work even without Docker network.
 """
 import asyncio
 import os
-import socket
 import time
 from collections import deque
 from contextlib import asynccontextmanager
@@ -13,8 +12,9 @@ from pathlib import Path
 
 import httpx
 from fastapi import FastAPI
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
+
 
 def env_bool(name: str, default: bool = False) -> bool:
     return os.getenv(name, str(default)).lower() in ("1", "true", "yes", "on")
@@ -193,7 +193,7 @@ async def api_status():
             "ollama_host": os.getenv("OLLAMA_HOST", "localhost"),
             "ollama_port": int(os.getenv("OLLAMA_PORT", "11434")),
             "prod_hosts": os.getenv("PROD_HOSTS", ""),
-        }
+        },
     })
 
 
