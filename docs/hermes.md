@@ -1,7 +1,6 @@
-# StackDeploy + Hermes Agent
+# arah + Hermes Agent
 
-This doc describes how the Hermes Agent uses the local StackDeploy services.
-
+This doc describes how the Hermes Agent uses the local arah services.
 ## Cluster Health
 ```bash
 curl -s -o /dev/null -w 'searxng=%{http_code}\n' 'http://localhost:8080/search?format=json&q=test'
@@ -22,16 +21,16 @@ curl -s -o /dev/null -w 'qdrant=%{http_code}\n' http://localhost:6333/
   - Web UI / REST API root
 - Obsidian
   - Web UI: `http://localhost:8083`
-  - Vault path: `/home/j1admin/ObsidianVault`
+  - Vault path: `<OBSIDIAN_VAULT_PATH>`
 
 ## BrowserSearch CLI
 ```bash
-cd /home/j1admin/StackDeploy/browser-search
+cd "$(git rev-parse --show-toplevel)"/browser-search
 node scripts/cloak/cloak-fetch.mjs "https://example.com" --format markdown
 ```
 
 ## Smoke test
 ```bash
-cd /home/j1admin/StackDeploy
+cd "$(git rev-parse --show-toplevel)"
 bash tests/smoke.sh
 ```

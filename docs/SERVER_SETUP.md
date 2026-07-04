@@ -9,8 +9,8 @@
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/OneByJorah/StackDeploy.git
-cd StackDeploy
+git clone https://github.com/OneByJorah/arah.git
+cd arah
 
 # 2. Environment
 cp .env.example .env
@@ -88,9 +88,3 @@ docker compose logs -f
 ## License
 
 MIT
-
----
-
-## Author
-
-Built by **Jhonattan L. Jimenez**.

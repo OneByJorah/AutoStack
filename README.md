@@ -1,49 +1,29 @@
-# StackDeploy
+# arah
 
-**Version:** v2.0  
-**Status:** Production Ready  
-**Repository:** https://github.com/OneByJorah/StackDeploy
+**Version:** v2.0
+**Status:** Production Ready
+**License:** MIT
 
----
-
-## Table of Contents
-
-- [Overview](#overview)
-- [Architecture](#architecture)
-- [Technology Stack](#technology-stack)
-- [Services](#services)
-- [Features](#features)
-- [Getting Started](#getting-started)
-- [Environment Variables](#environment-variables)
-- [Service Management](#service-management)
-- [Admin Panel](#admin-panel)
-- [CI/CD & Deployment](#cicd--deployment)
-- [Security](#security)
-- [Project Structure](#project-structure)
-- [Screenshots](#screenshots)
-- [Hermes Integration](#hermes-integration)
-- [License](#license)
-- [Author](#author)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---
 
 ## Overview
 
-StackDeploy is a **unified, production-ready Docker Compose deployment** that consolidates self-hosted web search, long-term memory, browser automation, vector storage, and Obsidian note-taking under a single IP with centralized management. Designed to run on consumer hardware with Tailscale networking, exposing everything through direct ports.
+arah is a unified, production-ready Docker Compose deployment that consolidates self-hosted web search, long-term memory, browser automation, vector storage, and Obsidian note-taking under a single management plane. Designed for consumer hardware with Tailscale networking, the stack exposes services through direct ports with centralized administration.
 
-**Core philosophy:** One stack, one IP, one admin panel, zero secrets in git.
+**Core philosophy:** One stack, one IP, one admin panel, zero secrets in Git.
 
-### Bundled Services
+## Features
 
-| Category | Services |
-|----------|----------|
-|| **Search & Browser** | SearXNG (8080), Camofox (9377), CloakBrowser (9222) |
-|| **Memory & Knowledge** | Honcho Memory API (8081) + pgvector/Redis, Qdrant (6333) |
-|| **Notes & Docs** | Obsidian Remote (8083) |
-|| **Admin & Ops** | **Portainer (9000/9443)** - Full container management |
-| **Monitoring** | **NOC Dashboard (9500)** — read-only unified health + Portainer stats |
-
----
+- ✅ **Single-command bootstrap** — `./bootstrap.sh` clones, configures, validates, and starts the stack
+- ✅ **Zero secrets in Git** — `.env.example` documents all variables; `.env` is gitignored
+- ✅ **Health checks on every service** — Docker healthchecks + `./scripts/healthcheck.sh`
+- ✅ **Portainer admin panel** — Visual container management, logs, stats, backups, RBAC
+- ✅ **CPU-first with GPU option** — Runs on CPU; optional upstream inference via Hermes config
+- ✅ **Extensible Compose blocks** — Add services by dropping in compose fragments
+- ✅ **CI/CD pipeline** — GitHub Actions: lint, build, test, deploy on push
+- ✅ **Hermes Agent integration** — Skills for search, memory, browser, notes
 
 ## Architecture
 
@@ -55,20 +35,21 @@ StackDeploy is a **unified, production-ready Docker Compose deployment** that co
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                    STACKDEPLOY                                  │
+│                    AR AH STACK                                  │
 │  ┌───────────────────────────────────────────────────────────┐  │
 │  │  SEARCH & BROWSER              MEMORY & KNOWLEDGE          │  │
 │  │  SearXNG (8080)                Honcho API (8081)           │  │
-│  │  Camofox (9377)                Qdrant (6333)               │  │
-│  │  CloakBrowser (9222)           PostgreSQL + Redis          │  │
+│  │  Selenium (4444)               Qdrant (6333)               │  │
+│  │                                 PostgreSQL (5432)           │  │
+│  │                                 Redis (6379)                │  │
 │  └───────────────────────────────────────────────────────────┘  │
 │                              │                                   │
 │        ┌─────────────────────┼─────────────────────┐             │
 │        ▼                     ▼                     ▼             │
 │  ┌───────────┐         ┌───────────┐         ┌───────────┐     │
-│  │  NOTES    │         │  ADMIN    │         │  OPTIONAL │     │
-│  │ Obsidian  │         │ Portainer │         │ Ollama    │     │
-│  │ (8083)    │         │ (9000)    │         │ (11434)   │     │
+│  │  NOTES    │         │  ADMIN    │         │ OPTIONAL  │     │
+│  │ Obsidian  │         │ Portainer │         │ Headroom  │     │
+│  │ (8083)    │         │ (9000)    │         │ (8787)    │     │
 │  └───────────┘         └───────────┘         └───────────┘     │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -78,52 +59,44 @@ StackDeploy is a **unified, production-ready Docker Compose deployment** that co
 - All services communicate over Docker internal network
 - Single Tailscale IP exposes everything via direct ports
 
----
-
 ## Technology Stack
 
 | Layer | Stack |
 |-------|-------|
 | Runtime | Linux (Ubuntu 22.04+), Docker Compose |
 | Orchestration | Docker Compose v2, Bash bootstrap scripts |
-| VCS | Git + GitHub (`github.com/OneByJorah/StackDeploy`) |
+| VCS | Git + GitHub (`github.com/OneByJorah/arah`) |
 | Memory/Context | Honcho (pgvector + Redis), Qdrant |
-| Search | SearXNG + Camofox (stealth browser) |
-| Notes | Obsidian Remote (web UI) |
+| Search | SearXNG + Selenium |
+| Notes | Obsidian Remote (Caddy reverse proxy) |
 | Admin | **Portainer CE** (full container lifecycle, RBAC, backups) |
+| Monitoring | **NOC Dashboard** (read-only unified health + Portainer stats) |
 | Notifications | Telegram (J1-bot) |
 | CI/CD | GitHub Actions (build, test, deploy) |
-
----
 
 ## Services
 
 | Service | Port | Health Endpoint | Purpose |
 |---------|------|-----------------|---------|
 | **SearXNG** | 8080 | `/search?q=healthcheck&format=json` | Privacy-respecting metasearch |
-| **Camofox** | 9377 | `/health` | Stealth browser automation API |
-| **CloakBrowser** | 9222 | `/json/version` | Stealth browser for protected sites |
+| **Selenium** | 4444 | `/status` | Browser automation API |
 | **Obsidian** | 8083 | `/` | Remote vault web UI |
 | **Qdrant** | 6333 | `/readyz` | Vector database |
 | **Honcho API** | 8081 | `/healthz` | Long-term memory for agents |
-| **Honcho DB** | 5432 | `pg_isready` | PostgreSQL + pgvector |
 | **Honcho Redis** | 6379 | `redis-cli ping` | Cache layer |
+| **Honcho Postgres** | 5432 | `pg_isready` | PostgreSQL + pgvector |
 | **Portainer** | 9000/9443 | `/` | **Admin panel - full container mgmt** |
-
----
 
 ## Features
 
 - ✅ **Single-command bootstrap** - `./scripts/bootstrap.sh` clones, configures, starts, validates
-- ✅ **Zero-secrets in git** - `.env.example` documents all vars; `.env` is gitignored
+- ✅ **Zero-secrets in Git** - `.env.example` documents all vars; `.env` is gitignored
 - ✅ **Health checks on every service** - Docker healthchecks + `./scripts/healthcheck.sh`
 - ✅ **Portainer admin panel** - Visual container management, logs, stats, backups, RBAC
 - ✅ **CPU-first with GPU option** - Runs on CPU; Ollama on Tailscale host for GPU inference
 - ✅ **Extensible Compose blocks** - Add services by dropping in compose fragments
 - ✅ **CI/CD pipeline** - GitHub Actions: lint, build, test, deploy on push
 - ✅ **Hermes Agent integration** - Skills for search, memory, browser, notes
-
----
 
 ## Getting Started
 
@@ -136,15 +109,15 @@ StackDeploy is a **unified, production-ready Docker Compose deployment** that co
 
 ```bash
 # 1. Clone
-git clone https://github.com/OneByJorah/StackDeploy.git
-cd StackDeploy
+git clone https://github.com/OneByJorah/arah.git
+cd arah
 
 # 2. Configure environment
 cp .env.example .env
 # Edit .env: set HONCHO_DB_PASSWORD, NEO4J_AUTH, CAMOFOX_API_KEY, etc.
 
 # 3. One-command deploy
-./scripts/bootstrap.sh
+./bootstrap.sh
 
 # 4. Verify
 ./scripts/healthcheck.sh localhost
@@ -164,14 +137,11 @@ docker compose up -d
 | **NOC Dashboard** | http://localhost:9500 |
 | **Portainer (Admin)** | http://localhost:9000 (HTTPS: 9443) |
 | **SearXNG** | http://localhost:8080 |
-| **Camofox** | http://localhost:9377 |
-| **CloakBrowser** | http://localhost:9222 |
+| **Selenium** | http://localhost:4444 |
 | **Obsidian** | http://localhost:8083 |
 | **Honcho API** | http://localhost:8081 |
 | **Qdrant** | http://localhost:6333 |
 | **Ollama** | http://localhost:11434 |
-
----
 
 ## Environment Variables
 
@@ -191,8 +161,6 @@ All secrets in `.env` (never committed). See `.env.example` for full list.
 | `ENABLE_HEADROOM_MONITORING` | Enable Headroom services in dashboard | Optional |
 | `OLLAMA_HOST` | Ollama Cloud hostname | Optional |
 | `OLLAMA_PORT` | Ollama Cloud port | Optional |
-
----
 
 ## Service Management
 
@@ -217,57 +185,10 @@ docker compose restart honcho
 docker compose ps
 ```
 
-### Portainer Admin Panel
-
-**The primary management interface.** After first start:
-1. Open http://localhost:9000
-2. Create admin user
-3. Select "Docker" environment (local)
-4. Manage all containers: start/stop, logs, stats, console, volumes, networks
-
-Features used:
-- **Container lifecycle** - restart, update images, recreate
-- **Logs & console** - debug without SSH
-- **Resource stats** - CPU, memory, network per container
-- **Volumes & networks** - inspect, backup, prune
-- **RBAC** - team access control
-- **Backup/Restore** - Portainer settings + stack configs
-
----
-
-## Admin Panel
-
-**Portainer** is the single admin interface for the entire stack. No custom admin panel code needed - Portainer provides:
-
-- ✅ Container management (start/stop/restart/recreate)
-- ✅ Real-time logs & console access
-- ✅ Resource monitoring (CPU, RAM, network, disk)
-- ✅ Volume & network management
-- ✅ Image management (pull, prune, tag)
-- ✅ Stack deployment from git
-- ✅ RBAC for team access
-- ✅ Backup/restore of Portainer config
-
-## NOC Dashboard
-
-**Unified read-only monitoring dashboard** (`noc-dashboard` service). Open `http://localhost:9500` to see:
-
-- **Service health** — same endpoints as `healthcheck.sh`, polled on an interval
-- **Latency sparklines** — rolling history per service
-- **Portainer stats** — optional container state/live counts from Portainer API
-- **Ollama inference** — checks Ollama Cloud availability on the host network
-- **No proxying** — each service still exposes its own port/API directly
-
-### Deploy
-
-```bash
-docker compose -f docker-compose.yml -f docker-compose.dashboard.yml up -d --build
-```
-
 ### Optional overlays
 
 ```bash
-# With Portainer + Headroom
+# With Portainer + Headroom + NOC Dashboard
 docker compose \
   -f docker-compose.yml \
   -f docker-compose.dashboard.yml \
@@ -287,8 +208,6 @@ docker compose \
 | `OLLAMA_HOST` | Ollama container/host name | `ollama` |
 | `OLLAMA_PORT` | Ollama port | `11434` |
 
----
-
 ## CI/CD & Deployment
 
 **GitHub Actions** (`.github/workflows/ci-cd.yml`):
@@ -302,28 +221,27 @@ docker compose \
 #   4. deploy     - SSH to server, pull, restart (on main)
 ```
 
-**Branch model:** `main` = stable; feature branches for WIP.
+**Branch model:** `main` = stable; feature branches for changes.
 
 **Deploy:** `git push origin main` → auto-deploys to configured host via SSH.
 
----
-
 ## Security
 
-- **No secrets in git** - `.env` in `.gitignore`; `.env.example` has placeholders
+- **No secrets in Git** - `.env` in `.gitignore`; `.env.example` has placeholders
 - **Portainer auth** - Admin user required on first access; RBAC for teams
 - **Network isolation** - Services on internal Docker network; only explicitly mapped ports exposed
 - **Tailscale** - All inter-host traffic encrypted; no public ports needed
 - **Read-only mounts** - Config files mounted `:ro` where possible
 - **Non-root containers** - Most services run as unprivileged users
 
----
-
 ## Project Structure
 
 ```
-StackDeploy/
-├── docker-compose.yml          # 9 services, validated
+arah/
+├── docker-compose.yml          # Core services
+├── docker-compose.headroom.yml # Headroom monitoring overlay
+├── docker-compose.portainer.yml # Portainer overlay
+├── docker-compose.dashboard.yml # NOC dashboard overlay
 ├── .env.example                # Documented placeholders
 ├── .env                        # Local secrets (gitignored)
 ├── .gitignore
@@ -340,88 +258,51 @@ StackDeploy/
 │       └── obsidian-markdown/
 ├── scripts/
 │   ├── bootstrap.sh            # One-command deploy
-│   ├── healthcheck.sh          # Validates all 9 services
+│   ├── healthcheck.sh          # Validates all services
 │   ├── init-honcho.sh          # Honcho alembic migrations
 │   └── init-obsidian.sh        # Vault initialization
-├── .github/
-│   └── workflows/
-│       └── ci-cd.yml           # Full CI/CD pipeline
 ├── docs/
 │   ├── SERVER_SETUP.md
-│   └── HERMES_SETUP.md
-└── README.md
+│   ├── HERMES_SETUP.md
+│   └── HONCHO_SETUP.md
+├── honcho/
+│   └── .env.honcho.example
+├── live-manifest.json          # Server topology manifest
+├── noc-dashboard/              # Read-only monitoring dashboard
+│   ├── Dockerfile
+│   ├── README.md
+│   ├── backend/
+│   └── frontend/
+├── profiles/                   # Deployment profiles
+│   ├── tailscale/
+│   ├── cloudflare/
+│   ├── local/
+│   └── all/
+└── tests/
+    └── smoke.sh
 ```
-
----
-
-## Screenshots
-
-All screenshots are live captures from the local dev instance (ollama host).
-
-### Portainer Admin Panel (Port 9000)
-![Portainer](docs/screenshots/portainer.png)
-*Full container lifecycle management*
-
-### SearXNG Search (Port 8080)
-![SearXNG](docs/screenshots/searxng.png)
-*Privacy-respecting metasearch*
-
-### Camofox Browser (Port 9377)
-![Camofox](docs/screenshots/camofox.png)
-*Stealth browser automation*
-
-### Obsidian Remote (Port 8083)
-![Obsidian](docs/screenshots/obsidian.png)
-*Web-based vault access*
-
-### Honcho Memory API (Port 8081)
-![Honcho](docs/screenshots/honcho.png)
-*Long-term memory for agents*
-
----
 
 ## Hermes Integration
 
-StackDeploy ships first-class Hermes Agent skills.
-
-### Local Install Path
-
-```bash
-~/.hermes/skills/devops/stackdeploy/SKILL.md
-```
+arah ships first-class Hermes Agent skills.
 
 ### Inline Commands
 
 ```bash
 # Health check
-cd /home/j1admin/StackDeploy && bash scripts/healthcheck.sh localhost
+bash scripts/healthcheck.sh localhost
 
 # JSON search via SearXNG
 curl -s 'http://localhost:8080/search?format=json&q=<query>&language=en'
 
-# Browser automation via Camofox
-curl -X POST http://localhost:9377/api/v1/browse \
-  -H "Content-Type: application/json" \
-  -d '{"url": "https://example.com", "action": "screenshot"}'
-
-# CloakBrowser for protected sites
-cd /home/j1admin/StackDeploy/browser-search && node scripts/cloak/cloak-fetch.mjs "https://example.com"
+# Browser automation via Selenium
+curl -X POST http://localhost:4444/status
 
 # Honcho memory operations
 curl -X POST http://localhost:8081/api/v1/memory \
-  -H "Authorization: Bearer $HONCHO_TOKEN" \
+  -H "Content-Type: application/json" \
   -d '{"text": "Remember this..."}'
 ```
-
-### Skill Files
-
-| Script | Purpose |
-|--------|---------|
-| `scripts/healthcheck.sh` | Full stack validation |
-| `scripts/bootstrap.sh` | One-command deploy |
-| `scripts/init-honcho.sh` | Run alembic migrations |
-
----
 
 ## License
 
@@ -429,10 +310,4 @@ MIT
 
 ---
 
-## Author
-
-Built by **Jhonattan L. Jimenez** (J1admin).
-
-- GitHub: [@OneByJorah](https://github.com/OneByJorah)
-- Tailscale: `ollama` (ollama host)
-- Primary GPU: RTX 3060 12GB
+*arah is maintained by the J1 team. For enterprise support, contact J1admin.*
