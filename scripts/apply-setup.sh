@@ -34,7 +34,7 @@ if [[ "$mode" == "cloudflare" || "$mode" == "all" ]]; then
     mkdir -p "$(dirname "$cf_config")"
     cat > "$cf_config" <<EOF
 tunnel: ${cf_tunnel}
-credentials-file: /home/j1admin/.cloudflared/${cf_tunnel}.json
+credentials-file: "$(git rev-parse --show-toplevel)"/.cloudflared/${cf_tunnel}.json
 ingress:
   - hostname: ${cf_host}
     path: /honcho/*

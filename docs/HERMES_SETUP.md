@@ -4,8 +4,8 @@
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/OneByJorah/StackDeploy.git
-cd StackDeploy
+git clone https://github.com/OneByJorah/arah.git
+cd arah
 
 # 2. Environment
 cp .env.example .env
@@ -43,7 +43,7 @@ honcho:
 
 obsidian:
   enabled: true
-  vault_path: /home/j1admin/ObsidianVault
+  vault_path: <OBSIDIAN_VAULT_PATH>
 ```
 
 For local Obsidian, open the vault folder in the desktop app. Hermes reads and writes notes directly through the Obsidian skill.
@@ -53,9 +53,3 @@ For local Obsidian, open the vault folder in the desktop app. Hermes reads and w
 ## License
 
 MIT
-
----
-
-## Author
-
-Built by **Jhonattan L. Jimenez**.

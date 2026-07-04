@@ -55,7 +55,7 @@ if [[ "$MODE" == "cloudflare" || "$MODE" == "all" ]]; then
   fi
   cat > ~/.cloudflared/config.yml <<EOF
 tunnel: ${CF_TUNNEL}
-credentials-file: /home/j1admin/.cloudflared/${CF_TUNNEL}.json
+credentials-file: "$(git rev-parse --show-toplevel)"/.cloudflared/${CF_TUNNEL}.json
 ingress:
   - hostname: ${CF_HOSTNAME}
     path: /honcho/*
