@@ -38,22 +38,22 @@ credentials-file: /home/j1admin/.cloudflared/${cf_tunnel}.json
 ingress:
   - hostname: ${cf_host}
     path: /honcho/*
-    service: http://100.66.142.21:8000
+    service: http://<tailscale-ip>:8000
   - hostname: ${cf_host}
     path: /qdrant/*
-    service: http://100.66.142.21:6333
+    service: http://<tailscale-ip>:6333
   - hostname: ${cf_host}
     path: /search/*
-    service: http://100.66.142.21:8080
+    service: http://<tailscale-ip>:8080
   - hostname: ${cf_host}
     path: /obsidian/*
-    service: http://100.66.142.21:8083
+    service: http://<tailscale-ip>:8083
   - hostname: ${cf_host}
     path: /costforge/*
-    service: http://100.66.142.21:8090
+    service: http://<tailscale-ip>:8090
   - hostname: ${cf_host}
     path: /noc/*
-    service: http://100.66.142.21:9500
+    service: http://<tailscale-ip>:9500
   - service: http_status:404
 EOF
     echo "Wrote Cloudflare tunnel config to $cf_config"
