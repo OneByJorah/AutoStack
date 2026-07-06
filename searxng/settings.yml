@@ -2,7 +2,8 @@ use_default_settings: true
 server:
   bind_address: "0.0.0.0"
   port: 8080
-  secret_key: "stackdeploy-searxng"
+  # Set via SEARXNG_SECRET_KEY environment variable in docker-compose.yml
+  secret_key: "changeme"
   public_instance: false
 search:
   formats:

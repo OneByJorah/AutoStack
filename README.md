@@ -179,6 +179,7 @@ All secrets in `.env` (never committed). See `.env.example` for full list.
 
 | Variable | Purpose | Required |
 |----------|---------|----------|
+| `SEARXNG_SECRET_KEY` | SearXNG secret key for session signing | Optional |
 | `HONCHO_DB_PASSWORD` | PostgreSQL password for Honcho | Yes |
 | `CAMOFOX_API_KEY` | Camofox auth key | Optional |
 | `CAMOFOX_ADMIN_KEY` | Camofox admin key | Optional |
