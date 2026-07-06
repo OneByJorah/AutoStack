@@ -20,4 +20,6 @@ build/
 *.so
 # Logs
 *.log
+# Pipeline reports
+reports/
 profiles/local/.env
