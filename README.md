@@ -291,20 +291,12 @@ docker compose \
 
 ## CI/CD & Deployment
 
-**GitHub Actions** (`.github/workflows/ci-cd.yml`):
+**GitHub Actions** (`.github/workflows/codeql.yml`):
 
-```yaml
-# Triggers: push to main, PR to main
-# Jobs:
-#   1. lint       - hadolint, shellcheck, yamllint
-#   2. build      - docker compose build (all services)
-#   3. test       - spin up stack, run healthcheck.sh
-#   4. deploy     - SSH to server, pull, restart (on main)
-```
+- Weekly CodeQL security scanning (Python, JavaScript)
+- Triggers: push to main/master, PR to main/master
 
 **Branch model:** `main` = stable; feature branches for WIP.
-
-**Deploy:** `git push origin main` → auto-deploys to configured host via SSH.
 
 ---
 
@@ -356,6 +348,9 @@ StackDeploy/
 
 ## Screenshots
 
+Screenshots are planned but not yet captured. See the live deployment for visual reference.
+
+<!--
 All screenshots are live captures from the local dev instance (ollama host).
 
 ### Portainer Admin Panel (Port 9000)
@@ -377,6 +372,7 @@ All screenshots are live captures from the local dev instance (ollama host).
 ### Honcho Memory API (Port 8081)
 ![Honcho](docs/screenshots/honcho.png)
 *Long-term memory for agents*
+-->
 
 ---
 
