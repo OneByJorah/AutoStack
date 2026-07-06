@@ -31,6 +31,7 @@ cf_tunnel=$(python3 -c "import json; print(json.load(open('$SETUP_STATE')).get('
 
 if [[ "$mode" == "cloudflare" || "$mode" == "all" ]]; then
   if [ -n "$cf_host" ] && [ -n "$cf_tunnel" ]; then
+    SERVER_IP="${SERVER_IP:-100.66.142.21}"
     mkdir -p "$(dirname "$cf_config")"
     cat > "$cf_config" <<EOF
 tunnel: ${cf_tunnel}
@@ -38,22 +39,22 @@ credentials-file: /home/j1admin/.cloudflared/${cf_tunnel}.json
 ingress:
   - hostname: ${cf_host}
     path: /honcho/*
-    service: http://100.66.142.21:8000
+    service: http://${SERVER_IP}:8000
   - hostname: ${cf_host}
     path: /qdrant/*
-    service: http://100.66.142.21:6333
+    service: http://${SERVER_IP}:6333
   - hostname: ${cf_host}
     path: /search/*
-    service: http://100.66.142.21:8080
+    service: http://${SERVER_IP}:8080
   - hostname: ${cf_host}
     path: /obsidian/*
-    service: http://100.66.142.21:8083
+    service: http://${SERVER_IP}:8083
   - hostname: ${cf_host}
     path: /costforge/*
-    service: http://100.66.142.21:8090
+    service: http://${SERVER_IP}:8090
   - hostname: ${cf_host}
     path: /noc/*
-    service: http://100.66.142.21:9500
+    service: http://${SERVER_IP}:9500
   - service: http_status:404
 EOF
     echo "Wrote Cloudflare tunnel config to $cf_config"
