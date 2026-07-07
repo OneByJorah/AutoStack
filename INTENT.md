@@ -1,6 +1,6 @@
 # INTENT.md — J1-PIPELINE Phase -1 (ORACLE)
 
-**Repository:** `OneByJorah/arah`  
+**Repository:** `OneByJorah/AutoStack`  
 **Analysis Date:** 2026-07-05  
 **Analyst:** J1-PIPELINE ORACLE (read-only)  
 **Status:** Intent Reconstructed
@@ -11,7 +11,7 @@
 
 ### Technical Role
 
-**arah** (branded internally as **StackDeploy v2.0**) is a **unified, production-ready Docker Compose deployment** that consolidates the full self-hosted infrastructure stack for an autonomous AI agent (Hermes Agent) under a single IP with centralized management. It bundles services across five functional categories:
+**AutoStack** (branded internally as **StackDeploy v2.0**) is a **unified, production-ready Docker Compose deployment** that consolidates the full self-hosted infrastructure stack for an autonomous AI agent (Hermes Agent) under a single IP with centralized management. It bundles services across five functional categories:
 
 | Category | Services | Ports |
 |----------|----------|-------|
@@ -23,7 +23,7 @@
 
 ### Operational Role
 
-arah is the **infrastructure substrate** for the JorahOne ecosystem's AI agent operations. It provides:
+AutoStack is the **infrastructure substrate** for the JorahOne ecosystem's AI agent operations. It provides:
 
 1. **Private web search** — SearXNG metasearch so Hermes can search the web without leaking queries to Google/Bing.
 2. **Stealth browser automation** — Camofox + CloakBrowser for programmatic web browsing that evades bot detection (Cloudflare, Akamai, DataDome), enabling Hermes to interact with protected sites.
@@ -54,7 +54,7 @@ The web is also increasingly hostile to automation — Cloudflare, Akamai, DataD
 - **Obsidian alone** provides notes but no agent integration.
 - **Portainer alone** provides container management but no service-level health monitoring.
 - **No existing project** combined all of these into a single `docker compose` stack with health checks, CI/CD, zero-secrets-in-git policy, multi-mode networking (local/Tailscale/Cloudflare), and Hermes Agent skill integration.
-- **browser-search** (the search/browse skill) was originally a standalone project — it was folded into arah to provide a complete, pre-integrated agent infrastructure package.
+- **browser-search** (the search/browse skill) was originally a standalone project — it was folded into AutoStack to provide a complete, pre-integrated agent infrastructure package.
 
 ### What Triggered Development
 
@@ -62,20 +62,20 @@ The development of Hermes Agent (Nous Research's autonomous AI assistant) create
 
 ### JorahOne Ecosystem Fit
 
-arah is the **infrastructure layer** of the JorahOne ecosystem:
+AutoStack is the **infrastructure layer** of the JorahOne ecosystem:
 
 ```
 JorahOne Ecosystem
-├── arah (StackDeploy)     ← Infrastructure: search, memory, browser, notes, monitoring
+├── AutoStack (StackDeploy)     ← Infrastructure: search, memory, browser, notes, monitoring
 ├── Honcho                 ← Agent memory engine (upstream: plastic-labs/honcho)
 ├── Headroom               ← Graph memory / Aphrodite proxy (upstream: headroomlabs-ai/headroom)
 ├── CostForge              ← Cost tracking (planned, empty dir)
 ├── hermes-brain-stack     ← Brain stack integration (planned, empty dir)
 ├── Hermes Agent           ← AI agent that consumes all of the above
-└── browser-search         ← Standalone search/browse skill (folded into arah)
+└── browser-search         ← Standalone search/browse skill (folded into AutoStack)
 ```
 
-arah provides the **self-hosted services** that Hermes Agent's web search, memory, browser, and note-taking capabilities depend on. Without arah, Hermes would need external SaaS for every capability. With arah, the entire agent infrastructure runs on local hardware behind Tailscale, with zero external dependencies for core operations.
+AutoStack provides the **self-hosted services** that Hermes Agent's web search, memory, browser, and note-taking capabilities depend on. Without AutoStack, Hermes would need external SaaS for every capability. With AutoStack, the entire agent infrastructure runs on local hardware behind Tailscale, with zero external dependencies for core operations.
 
 ---
 
@@ -121,7 +121,7 @@ Evidence:
 ## Repository Structure
 
 ```
-arah/
+AutoStack/
 ├── docker-compose.yml              # Base: SearXNG, Qdrant, Honcho, Obsidian, WebAutomation
 ├── docker-compose.honcho.yml       # Overlay: Honcho API + pgvector + Redis
 ├── docker-compose.headroom.yml     # Overlay: Headroom proxy + Qdrant + Neo4j
@@ -202,12 +202,12 @@ arah/
 
 ## Notes
 
-- **Naming discrepancy:** The repo's GitHub name is **arah** but the README brand is **StackDeploy v2.0**. This should be resolved in a future phase.
+- **Naming resolved:** The repo's GitHub name is now **AutoStack** matching the README brand **StackDeploy v2.0**.
 - **Empty directories:** `CostForge/` and `hermes-brain-stack/` exist but are empty — planned future additions for cost tracking and brain stack integration.
 - **Missing submodules:** `vendor/honcho` and `vendor/headroom` are referenced in compose files but not currently checked into the repo. The compose files reference `context: vendor/honcho` and `context: vendor/headroom` for building from source, but these directories don't exist.
 - **Portainer service gap:** Portainer was referenced in the README and healthcheck script but had no compose definition until `docker-compose.portainer.yml` was added (noted in the file's own comment: "was never actually defined as a service — this fills that gap").
 - **Dependabot config drift:** Dependabot is configured for `pip` at directory `/`, but there is no `requirements.txt` at the repo root — only in `noc-dashboard/backend/`. The `npm` and `docker` ecosystems are correctly configured. This is a minor template vestige.
 - **Security audit history:** Two security commits in git history — `7fac97d` (redacted hardcoded Tailscale IPs) and `a06767a` (sanitized j1admin email references). This is a positive maturity signal.
-- **browser-search provenance:** The `browser-search/` subdirectory is a standalone open-source project (MIT, 11-language README) that was folded into arah. It has its own `package.json`, `SKILL.md`, and multi-language documentation.
+- **browser-search provenance:** The `browser-search/` subdirectory is a standalone open-source project (MIT, 11-language README) that was folded into AutoStack. It has its own `package.json`, `SKILL.md`, and multi-language documentation.
 - **Live deployment:** `live-manifest.json` documents a real production deployment with Tailscale networking, all services verified as "up", and a `CostForge` service listed as "pending".
 - **Honcho config.toml** is extensively configured with multi-tier LLM providers (vllm primary, custom backup), dialectic reasoning levels (minimal through max), memory consolidation ("dream"), and session summarization — all targeting Hermes Agent integration.

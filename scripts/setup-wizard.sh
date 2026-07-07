@@ -3,7 +3,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-echo "=== arah setup wizard ==="
+echo "=== AutoStack setup wizard ==="
 echo "Select stack access mode:"
 echo "  1) local      (host networking, no tunnels)"
 echo "  2) tailscale  (Tailscale-only access)"

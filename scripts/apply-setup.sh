@@ -73,4 +73,4 @@ sudo docker compose up -d
 echo "Running healthcheck..."
 bash "$REPO_ROOT/scripts/healthcheck.sh" || true
 
-echo "arah setup applied: mode=$mode"
+echo "AutoStack setup applied: mode=$mode"
