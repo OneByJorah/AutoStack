@@ -1,7 +1,7 @@
 """
-J1-NOC Dashboard — StackDeploy monitoring backend.
+J1-NOC Dashboard — AutoStack monitoring backend.
 
-Polls every service in StackDeploy over the internal Docker network using
+Polls every service in AutoStack over the internal Docker network using
 the SAME health endpoints defined in docker-compose.yml / scripts/healthcheck.sh,
 plus optional Portainer container stats if PORTAINER_URL is set.
 
@@ -190,7 +190,7 @@ async def lifespan(app: FastAPI):
     task.cancel()
 
 
-app = FastAPI(title="J1-NOC StackDeploy Dashboard", lifespan=lifespan)
+app = FastAPI(title="J1-NOC AutoStack Dashboard", lifespan=lifespan)
 
 
 @app.get("/api/status")

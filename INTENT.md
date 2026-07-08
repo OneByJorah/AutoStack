@@ -11,7 +11,7 @@
 
 ### Technical Role
 
-**AutoStack** (branded internally as **StackDeploy v2.0**) is a **unified, production-ready Docker Compose deployment** that consolidates the full self-hosted infrastructure stack for an autonomous AI agent (Hermes Agent) under a single IP with centralized management. It bundles services across five functional categories:
+**AutoStack** (branded internally as **AutoStack v2.0**) is a **unified, production-ready Docker Compose deployment** that consolidates the full self-hosted infrastructure stack for an autonomous AI agent (Hermes Agent) under a single IP with centralized management. It bundles services across five functional categories:
 
 | Category | Services | Ports |
 |----------|----------|-------|
@@ -66,7 +66,7 @@ AutoStack is the **infrastructure layer** of the JorahOne ecosystem:
 
 ```
 JorahOne Ecosystem
-├── AutoStack (StackDeploy)     ← Infrastructure: search, memory, browser, notes, monitoring
+├── AutoStack     ← Infrastructure: search, memory, browser, notes, monitoring
 ├── Honcho                 ← Agent memory engine (upstream: plastic-labs/honcho)
 ├── Headroom               ← Graph memory / Aphrodite proxy (upstream: headroomlabs-ai/headroom)
 ├── CostForge              ← Cost tracking (planned, empty dir)
@@ -195,14 +195,14 @@ AutoStack/
 ├── SECURITY.md                     # 90-day disclosure policy
 ├── LICENSE                         # MIT
 ├── .gitignore                      # .env, __pycache__, node_modules, etc.
-└── README.md                       # StackDeploy v2.0 README
+└── README.md                       # AutoStack v2.0 README
 ```
 
 ---
 
 ## Notes
 
-- **Naming resolved:** The repo's GitHub name is now **AutoStack** matching the README brand **StackDeploy v2.0**.
+- **Naming resolved:** The repo's GitHub name is now **AutoStack** matching the README brand **AutoStack v2.0**.
 - **Empty directories:** `CostForge/` and `hermes-brain-stack/` exist but are empty — planned future additions for cost tracking and brain stack integration.
 - **Missing submodules:** `vendor/honcho` and `vendor/headroom` are referenced in compose files but not currently checked into the repo. The compose files reference `context: vendor/honcho` and `context: vendor/headroom` for building from source, but these directories don't exist.
 - **Portainer service gap:** Portainer was referenced in the README and healthcheck script but had no compose definition until `docker-compose.portainer.yml` was added (noted in the file's own comment: "was never actually defined as a service — this fills that gap").

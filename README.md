@@ -1,8 +1,8 @@
-# StackDeploy
+# AutoStack
 
 **Version:** v2.0  
 **Status:** Production Ready  
-**Repository:** https://github.com/OneByJorah/StackDeploy
+**Repository:** https://github.com/OneByJorah/AutoStack
 
 ---
 
@@ -29,7 +29,7 @@
 
 ## Overview
 
-StackDeploy is a **unified, production-ready Docker Compose deployment** that consolidates self-hosted web search, long-term memory, browser automation, vector storage, and Obsidian note-taking under a single IP with centralized management. Designed to run on consumer hardware with Tailscale networking, exposing everything through direct ports.
+AutoStack is a **unified, production-ready Docker Compose deployment** that consolidates self-hosted web search, long-term memory, browser automation, vector storage, and Obsidian note-taking under a single IP with centralized management. Designed to run on consumer hardware with Tailscale networking, exposing everything through direct ports.
 
 **Core philosophy:** One stack, one IP, one admin panel, zero secrets in git.
 
@@ -55,7 +55,7 @@ StackDeploy is a **unified, production-ready Docker Compose deployment** that co
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                    STACKDEPLOY                                  │
+│                    AUTOSTACK                                    │
 │  ┌───────────────────────────────────────────────────────────┐  │
 │  │  SEARCH & BROWSER              MEMORY & KNOWLEDGE          │  │
 │  │  SearXNG (8080)                Honcho API (8081)           │  │
@@ -86,7 +86,7 @@ StackDeploy is a **unified, production-ready Docker Compose deployment** that co
 |-------|-------|
 | Runtime | Linux (Ubuntu 22.04+), Docker Compose |
 | Orchestration | Docker Compose v2, Bash bootstrap scripts |
-| VCS | Git + GitHub (`github.com/OneByJorah/StackDeploy`) |
+| VCS | Git + GitHub (`github.com/OneByJorah/AutoStack`) |
 | Memory/Context | Honcho (pgvector + Redis), Qdrant |
 | Search | SearXNG + Camofox (stealth browser) |
 | Notes | Obsidian Remote (web UI) |
@@ -136,8 +136,8 @@ StackDeploy is a **unified, production-ready Docker Compose deployment** that co
 
 ```bash
 # 1. Clone
-git clone https://github.com/OneByJorah/StackDeploy.git
-cd StackDeploy
+git clone https://github.com/OneByJorah/AutoStack.git
+cd AutoStack
 
 # 2. Configure environment
 cp .env.example .env
@@ -315,7 +315,7 @@ docker compose \
 ## Project Structure
 
 ```
-StackDeploy/
+AutoStack/
 ├── docker-compose.yml          # 9 services, validated
 ├── .env.example                # Documented placeholders
 ├── .env                        # Local secrets (gitignored)
@@ -379,19 +379,19 @@ All screenshots are live captures from the local dev instance (ollama host).
 
 ## Hermes Integration
 
-StackDeploy ships first-class Hermes Agent skills.
+AutoStack ships first-class Hermes Agent skills.
 
 ### Local Install Path
 
 ```bash
-~/.hermes/skills/devops/stackdeploy/SKILL.md
+~/.hermes/skills/devops/autostack/SKILL.md
 ```
 
 ### Inline Commands
 
 ```bash
 # Health check
-cd /home/j1admin/StackDeploy && bash scripts/healthcheck.sh localhost
+cd /home/j1admin/AutoStack && bash scripts/healthcheck.sh localhost
 
 # JSON search via SearXNG
 curl -s 'http://localhost:8080/search?format=json&q=<query>&language=en'
@@ -402,11 +402,11 @@ curl -X POST http://localhost:9377/api/v1/browse \
   -d '{"url": "https://example.com", "action": "screenshot"}'
 
 # CloakBrowser for protected sites
-cd /home/j1admin/StackDeploy/browser-search && node scripts/cloak/cloak-fetch.mjs "https://example.com"
+cd /home/j1admin/AutoStack/browser-search && node scripts/cloak/cloak-fetch.mjs "https://example.com"
 
 # Honcho memory operations
 curl -X POST http://localhost:8081/api/v1/memory \
-  -H "Authorization: Bearer $HONCHO_TOKEN" \
+  -H "Authorization: Bearer ***" \
   -d '{"text": "Remember this..."}'
 ```
 
