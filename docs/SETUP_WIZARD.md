@@ -1,6 +1,6 @@
 # Setup Wizard
 
-arah supports four access modes. Choose one at install time, or switch later by updating `.env`.
+AutoStack supports four access modes. Choose one at install time, or switch later by updating `.env`.
 
 - `local` — no tunnels, no tailscale, no cloudflare; services reachable on localhost ports only.
 - `tailscale` — services exposed over Tailscale only.
@@ -25,7 +25,7 @@ ENABLE_SETUP_API=1 docker compose -f docker-compose.yml -f noc-dashboard/docker-
 
 Then open:
 - `http://localhost:9500/setup`
-- Or, if the Cloudflare tunnel is active: `https://arah.<your-domain>.com/setup`
+- Or, if the Cloudflare tunnel is active: `https://autostack.<your-domain>.com/setup`
 
 Select mode, enter tokens/tunnel info, and submit.
 

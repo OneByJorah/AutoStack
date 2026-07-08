@@ -6,10 +6,11 @@
 docker compose restart
 ```
 
-## Update model
+## Update images
 
 ```bash
-docker compose up -d llama-server
+docker compose pull
+docker compose up -d
 ```
 
 ## Backup Honcho memory

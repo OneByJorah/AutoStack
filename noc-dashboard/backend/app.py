@@ -1,7 +1,7 @@
 """
-J1-NOC Dashboard — StackDeploy monitoring backend.
+J1-NOC Dashboard — AutoStack monitoring backend.
 
-Polls every service in StackDeploy over the internal Docker network using
+Polls every service in AutoStack over the internal Docker network using
 the SAME health endpoints defined in docker-compose.yml / scripts/healthcheck.sh,
 plus optional Portainer container stats if PORTAINER_URL is set.
 
@@ -190,7 +190,7 @@ async def lifespan(app: FastAPI):
     task.cancel()
 
 
-app = FastAPI(title="J1-NOC StackDeploy Dashboard", lifespan=lifespan)
+app = FastAPI(title="J1-NOC AutoStack Dashboard", lifespan=lifespan)
 
 
 @app.get("/api/status")
@@ -235,8 +235,8 @@ if os.getenv("ENABLE_SETUP_API", "0").lower() in ("1", "true", "yes", "on"):
 
     templates = Jinja2Templates(directory="/app/templates")
 
-    REPO_ROOT = Path("/workspace")
-    CF_DIR = Path("/cloudflared")
+    REPO_ROOT = Path(os.getenv("REPO_ROOT", "/workspace"))
+    CF_DIR = Path(os.getenv("CF_DIR", "/cloudflared"))
     COMPOSE_FILE = REPO_ROOT / "docker-compose.yml"
 
     @app.get("/setup")
@@ -281,7 +281,7 @@ if os.getenv("ENABLE_SETUP_API", "0").lower() in ("1", "true", "yes", "on"):
             (REPO_ROOT / "setup-complete.json").write_text(json.dumps(payload, indent=2))
 
             if mode in ("cloudflare", "all") and cf_host and cf_tunnel:
-                cf_content = f"""tunnel: {cf_tunnel}\ncredentials-file: /home/j1admin/.cloudflared/{cf_tunnel}.json\ningress:\n  - hostname: {cf_host}\n    path: /honcho/*\n    service: http://100.66.142.21:8000\n  - hostname: {cf_host}\n    path: /qdrant/*\n    service: http://100.66.142.21:6333\n  - hostname: {cf_host}\n    path: /search/*\n    service: http://100.66.142.21:8080\n  - hostname: {cf_host}\n    path: /obsidian/*\n    service: http://100.66.142.21:8083\n  - hostname: {cf_host}\n    path: /costforge/*\n    service: http://100.66.142.21:8090\n  - hostname: {cf_host}\n    path: /noc/*\n    service: http://100.66.142.21:9500\n  - service: http_status:404\n"""
+                cf_content = f"""tunnel: {cf_tunnel}\ncredentials-file: {os.getenv("CLOUDFLARED_HOME", "/home/j1admin/.cloudflared")}/{cf_tunnel}.json\ningress:\n  - hostname: {cf_host}\n    path: /honcho/*\n    service: http://{os.getenv("SERVER_IP", "100.66.142.21")}:8000\n  - hostname: {cf_host}\n    path: /qdrant/*\n    service: http://{os.getenv("SERVER_IP", "100.66.142.21")}:6333\n  - hostname: {cf_host}\n    path: /search/*\n    service: http://{os.getenv("SERVER_IP", "100.66.142.21")}:8080\n  - hostname: {cf_host}\n    path: /obsidian/*\n    service: http://{os.getenv("SERVER_IP", "100.66.142.21")}:8083\n  - hostname: {cf_host}\n    path: /costforge/*\n    service: http://{os.getenv("SERVER_IP", "100.66.142.21")}:8090\n  - hostname: {cf_host}\n    path: /noc/*\n    service: http://{os.getenv("SERVER_IP", "100.66.142.21")}:9500\n  - service: http_status:404\n"""
                 CF_DIR.mkdir(parents=True, exist_ok=True)
                 (CF_DIR / "config.yml").write_text(cf_content)
 

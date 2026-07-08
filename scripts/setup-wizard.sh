@@ -3,7 +3,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-echo "=== arah setup wizard ==="
+echo "=== AutoStack setup wizard ==="
 echo "Select stack access mode:"
 echo "  1) local      (host networking, no tunnels)"
 echo "  2) tailscale  (Tailscale-only access)"
@@ -53,28 +53,29 @@ if [[ "$MODE" == "cloudflare" || "$MODE" == "all" ]]; then
     echo "Then re-run this wizard."
     exit 1
   fi
+  SERVER_IP="${SERVER_IP:-100.66.142.21}"
   cat > ~/.cloudflared/config.yml <<EOF
 tunnel: ${CF_TUNNEL}
 credentials-file: /home/j1admin/.cloudflared/${CF_TUNNEL}.json
 ingress:
   - hostname: ${CF_HOSTNAME}
     path: /honcho/*
-    service: http://100.66.142.21:8000
+    service: http://${SERVER_IP}:8000
   - hostname: ${CF_HOSTNAME}
     path: /qdrant/*
-    service: http://100.66.142.21:6333
+    service: http://${SERVER_IP}:6333
   - hostname: ${CF_HOSTNAME}
     path: /search/*
-    service: http://100.66.142.21:8080
+    service: http://${SERVER_IP}:8080
   - hostname: ${CF_HOSTNAME}
     path: /obsidian/*
-    service: http://100.66.142.21:8083
+    service: http://${SERVER_IP}:8083
   - hostname: ${CF_HOSTNAME}
     path: /costforge/*
-    service: http://100.66.142.21:8090
+    service: http://${SERVER_IP}:8090
   - hostname: ${CF_HOSTNAME}
     path: /noc/*
-    service: http://100.66.142.21:9500
+    service: http://${SERVER_IP}:9500
   - service: http_status:404
 EOF
   sudo systemctl enable --now cloudflared || true
