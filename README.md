@@ -1,8 +1,8 @@
-# StackDeploy
+# AutoStack
 
 **Version:** v2.0  
 **Status:** Production Ready  
-**Repository:** https://github.com/OneByJorah/StackDeploy
+**Repository:** https://github.com/OneByJorah/AutoStack
 
 ---
 
@@ -29,7 +29,7 @@
 
 ## Overview
 
-StackDeploy is a **unified, production-ready Docker Compose deployment** that consolidates self-hosted web search, long-term memory, browser automation, vector storage, and Obsidian note-taking under a single IP with centralized management. Designed to run on consumer hardware with Tailscale networking, exposing everything through direct ports.
+AutoStack is a **unified, production-ready Docker Compose deployment** that consolidates self-hosted web search, long-term memory, browser automation, vector storage, and Obsidian note-taking under a single IP with centralized management. Designed to run on consumer hardware with Tailscale networking, exposing everything through direct ports.
 
 **Core philosophy:** One stack, one IP, one admin panel, zero secrets in git.
 
@@ -86,7 +86,7 @@ StackDeploy is a **unified, production-ready Docker Compose deployment** that co
 |-------|-------|
 | Runtime | Linux (Ubuntu 22.04+), Docker Compose |
 | Orchestration | Docker Compose v2, Bash bootstrap scripts |
-| VCS | Git + GitHub (`github.com/OneByJorah/StackDeploy`) |
+| VCS | Git + GitHub (`github.com/OneByJorah/AutoStack`) |
 | Memory/Context | Honcho (pgvector + Redis), Qdrant |
 | Search | SearXNG + Camofox (stealth browser) |
 | Notes | Obsidian Remote (web UI) |
@@ -136,8 +136,8 @@ StackDeploy is a **unified, production-ready Docker Compose deployment** that co
 
 ```bash
 # 1. Clone
-git clone https://github.com/OneByJorah/StackDeploy.git
-cd StackDeploy
+git clone https://github.com/OneByJorah/AutoStack.git
+cd AutoStack
 
 # 2. Configure environment
 cp .env.example .env
@@ -322,7 +322,7 @@ docker compose \
 ## Project Structure
 
 ```
-StackDeploy/
+AutoStack/
 ├── docker-compose.yml          # 9 services, validated
 ├── .env.example                # Documented placeholders
 ├── .env                        # Local secrets (gitignored)
@@ -354,35 +354,15 @@ StackDeploy/
 
 ---
 
-## Screenshots
+## 📸 Screenshot
 
-All screenshots are live captures from the local dev instance (ollama host).
-
-### Portainer Admin Panel (Port 9000)
-![Portainer](docs/screenshots/portainer.png)
-*Full container lifecycle management*
-
-### SearXNG Search (Port 8080)
-![SearXNG](docs/screenshots/searxng.png)
-*Privacy-respecting metasearch*
-
-### Camofox Browser (Port 9377)
-![Camofox](docs/screenshots/camofox.png)
-*Stealth browser automation*
-
-### Obsidian Remote (Port 8083)
-![Obsidian](docs/screenshots/obsidian.png)
-*Web-based vault access*
-
-### Honcho Memory API (Port 8081)
-![Honcho](docs/screenshots/honcho.png)
-*Long-term memory for agents*
+This is a CLI/infrastructure stack. No screenshots available.
 
 ---
 
 ## Hermes Integration
 
-StackDeploy ships first-class Hermes Agent skills.
+AutoStack ships first-class Hermes Agent skills.
 
 ### Local Install Path
 
@@ -394,7 +374,7 @@ StackDeploy ships first-class Hermes Agent skills.
 
 ```bash
 # Health check
-cd /home/j1admin/StackDeploy && bash scripts/healthcheck.sh localhost
+cd /home/j1admin/AutoStack && bash scripts/healthcheck.sh localhost
 
 # JSON search via SearXNG
 curl -s 'http://localhost:8080/search?format=json&q=<query>&language=en'
@@ -405,7 +385,7 @@ curl -X POST http://localhost:9377/api/v1/browse \
   -d '{"url": "https://example.com", "action": "screenshot"}'
 
 # CloakBrowser for protected sites
-cd /home/j1admin/StackDeploy/browser-search && node scripts/cloak/cloak-fetch.mjs "https://example.com"
+cd /home/j1admin/AutoStack/browser-search && node scripts/cloak/cloak-fetch.mjs "https://example.com"
 
 # Honcho memory operations
 curl -X POST http://localhost:8081/api/v1/memory \
@@ -431,7 +411,7 @@ MIT
 
 ## Author
 
-Built by **Jhonattan L. Jimenez** (J1admin).
+Built by **Jhonattan L. Jimenez** / JorahOne LLC.
 
 - GitHub: [@OneByJorah](https://github.com/OneByJorah)
 - Tailscale: `ollama` (ollama host)

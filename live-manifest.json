@@ -1,8 +1,8 @@
 {
   "updated_at": "2026-07-03T03:45:00Z",
   "tailscale_ip": "[REDACTED]",
-  "github_repo": "OneByJorah/arah",
-  "repo_url": "https://github.com/OneByJorah/arah",
+  "github_repo": "OneByJorah/AutoStack",
+  "repo_url": "https://github.com/OneByJorah/AutoStack",
   "tunnel_hostname": "arah.<your-domain>.com",
   "services": {
     "honcho": {
