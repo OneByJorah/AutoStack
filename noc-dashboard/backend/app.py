@@ -190,7 +190,7 @@ async def lifespan(app: FastAPI):
     task.cancel()
 
 
-app = FastAPI(title="J1-NOC StackDeploy Dashboard", lifespan=lifespan)
+app = FastAPI(title="NOC AutoStack Dashboard", lifespan=lifespan)
 
 
 @app.get("/api/status")

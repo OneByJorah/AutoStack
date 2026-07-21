@@ -1,6 +1,6 @@
-# StackDeploy + Hermes Agent
+# AutoStack + Hermes Agent
 
-This doc describes how the Hermes Agent uses the local StackDeploy services.
+This doc describes how the Hermes Agent uses the local AutoStack services.
 
 ## Cluster Health
 ```bash

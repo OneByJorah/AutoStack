@@ -1,5 +1,5 @@
 """
-J1-NOC Dashboard — Standalone version (no Docker required).
+NOC Dashboard — Standalone version (no Docker required).
 Mounts static files from local frontend/ dir and adds localhost fallback
 for services so health checks work even without Docker network.
 """
@@ -172,7 +172,7 @@ async def lifespan(app: FastAPI):
     task.cancel()
 
 
-app = FastAPI(title="J1-NOC StackDeploy Dashboard", lifespan=lifespan)
+app = FastAPI(title="NOC StackDeploy Dashboard", lifespan=lifespan)
 
 
 @app.get("/api/status")
