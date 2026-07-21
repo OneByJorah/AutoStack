@@ -4,7 +4,7 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
 SETUP_STATE="${SETUP_STATE:-$REPO_ROOT/setup-complete.json}"
-cf_config="${cf_config:-$HOME/.cloudflared/config.yml}"
+cf_config="${cf_config:-$REPO_ROOT/.cloudflared/config.yml}"
 
 if [ ! -f "$SETUP_STATE" ]; then
   echo "No setup state found at $SETUP_STATE"
@@ -34,26 +34,26 @@ if [[ "$mode" == "cloudflare" || "$mode" == "all" ]]; then
     mkdir -p "$(dirname "$cf_config")"
     cat > "$cf_config" <<EOF
 tunnel: ${cf_tunnel}
-credentials-file: /home/j1admin/.cloudflared/${cf_tunnel}.json
+credentials-file: ${CF_CREDENTIALS_DIR:-/opt/autostack/.cloudflared}/${cf_tunnel}.json
 ingress:
   - hostname: ${cf_host}
     path: /honcho/*
-    service: http://100.66.142.21:8000
+    service: http://${HOST_IP:-127.0.0.1}:8000
   - hostname: ${cf_host}
     path: /qdrant/*
-    service: http://100.66.142.21:6333
+    service: http://${HOST_IP:-127.0.0.1}:6333
   - hostname: ${cf_host}
     path: /search/*
-    service: http://100.66.142.21:8080
+    service: http://${HOST_IP:-127.0.0.1}:8080
   - hostname: ${cf_host}
     path: /obsidian/*
-    service: http://100.66.142.21:8083
+    service: http://${HOST_IP:-127.0.0.1}:8083
   - hostname: ${cf_host}
     path: /costforge/*
-    service: http://100.66.142.21:8090
+    service: http://${HOST_IP:-127.0.0.1}:8090
   - hostname: ${cf_host}
     path: /noc/*
-    service: http://100.66.142.21:9500
+    service: http://${HOST_IP:-127.0.0.1}:9500
   - service: http_status:404
 EOF
     echo "Wrote Cloudflare tunnel config to $cf_config"

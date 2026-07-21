@@ -1,7 +1,7 @@
 """
-J1-NOC Dashboard — StackDeploy monitoring backend.
+NOC Dashboard — AutoStack monitoring backend.
 
-Polls every service in StackDeploy over the internal Docker network using
+Polls every service in AutoStack over the internal Docker network using
 the SAME health endpoints defined in docker-compose.yml / scripts/healthcheck.sh,
 plus optional Portainer container stats if PORTAINER_URL is set.
 
@@ -281,7 +281,9 @@ if os.getenv("ENABLE_SETUP_API", "0").lower() in ("1", "true", "yes", "on"):
             (REPO_ROOT / "setup-complete.json").write_text(json.dumps(payload, indent=2))
 
             if mode in ("cloudflare", "all") and cf_host and cf_tunnel:
-                cf_content = f"""tunnel: {cf_tunnel}\ncredentials-file: /home/j1admin/.cloudflared/{cf_tunnel}.json\ningress:\n  - hostname: {cf_host}\n    path: /honcho/*\n    service: http://100.66.142.21:8000\n  - hostname: {cf_host}\n    path: /qdrant/*\n    service: http://100.66.142.21:6333\n  - hostname: {cf_host}\n    path: /search/*\n    service: http://100.66.142.21:8080\n  - hostname: {cf_host}\n    path: /obsidian/*\n    service: http://100.66.142.21:8083\n  - hostname: {cf_host}\n    path: /costforge/*\n    service: http://100.66.142.21:8090\n  - hostname: {cf_host}\n    path: /noc/*\n    service: http://100.66.142.21:9500\n  - service: http_status:404\n"""
+                cf_credentials_dir = os.getenv("CF_CREDENTIALS_DIR", "/opt/autostack/.cloudflared")
+                cf_host_ip = os.getenv("HOST_IP", "127.0.0.1")
+                cf_content = f"""tunnel: {cf_tunnel}\ncredentials-file: {cf_credentials_dir}/{cf_tunnel}.json\ningress:\n  - hostname: {cf_host}\n    path: /honcho/*\n    service: http://{cf_host_ip}:8000\n  - hostname: {cf_host}\n    path: /qdrant/*\n    service: http://{cf_host_ip}:6333\n  - hostname: {cf_host}\n    path: /search/*\n    service: http://{cf_host_ip}:8080\n  - hostname: {cf_host}\n    path: /obsidian/*\n    service: http://{cf_host_ip}:8083\n  - hostname: {cf_host}\n    path: /costforge/*\n    service: http://{cf_host_ip}:8090\n  - hostname: {cf_host}\n    path: /noc/*\n    service: http://{cf_host_ip}:9500\n  - service: http_status:404\n"""
                 CF_DIR.mkdir(parents=True, exist_ok=True)
                 (CF_DIR / "config.yml").write_text(cf_content)
 

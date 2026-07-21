@@ -26,7 +26,7 @@ services:
       retries: 3
 
   honcho:
-    image: ghcr.io/j1admin/honcho:latest
+    image: ${HONCHO_IMAGE:-ghcr.io/onebyjorah/honcho:latest}
     container_name: honcho
     restart: unless-stopped
     ports:

@@ -48,33 +48,35 @@ if [[ "$MODE" == "cloudflare" || "$MODE" == "all" ]]; then
     exit 1
   fi
   mkdir -p ~/.cloudflared
-  if [ ! -f ~/.cloudflared/config.yml ]; then
+  CF_CONFIG_DIR="${CF_CREDENTIALS_DIR:-/opt/autostack/.cloudflared}"
+  mkdir -p "$CF_CONFIG_DIR"
+  if [ ! -f "$CF_CONFIG_DIR/config.yml" ]; then
     echo "Please run: cloudflared tunnel login && cloudflared tunnel create $CF_TUNNEL"
     echo "Then re-run this wizard."
     exit 1
   fi
-  cat > ~/.cloudflared/config.yml <<EOF
+  cat > "$CF_CONFIG_DIR/config.yml" <<EOF
 tunnel: ${CF_TUNNEL}
-credentials-file: /home/j1admin/.cloudflared/${CF_TUNNEL}.json
+credentials-file: ${CF_CREDENTIALS_DIR:-/opt/autostack/.cloudflared}/${CF_TUNNEL}.json
 ingress:
   - hostname: ${CF_HOSTNAME}
     path: /honcho/*
-    service: http://100.66.142.21:8000
+    service: http://${HOST_IP:-127.0.0.1}:8000
   - hostname: ${CF_HOSTNAME}
     path: /qdrant/*
-    service: http://100.66.142.21:6333
+    service: http://${HOST_IP:-127.0.0.1}:6333
   - hostname: ${CF_HOSTNAME}
     path: /search/*
-    service: http://100.66.142.21:8080
+    service: http://${HOST_IP:-127.0.0.1}:8080
   - hostname: ${CF_HOSTNAME}
     path: /obsidian/*
-    service: http://100.66.142.21:8083
+    service: http://${HOST_IP:-127.0.0.1}:8083
   - hostname: ${CF_HOSTNAME}
     path: /costforge/*
-    service: http://100.66.142.21:8090
+    service: http://${HOST_IP:-127.0.0.1}:8090
   - hostname: ${CF_HOSTNAME}
     path: /noc/*
-    service: http://100.66.142.21:9500
+    service: http://${HOST_IP:-127.0.0.1}:9500
   - service: http_status:404
 EOF
   sudo systemctl enable --now cloudflared || true
