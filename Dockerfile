@@ -5,7 +5,7 @@
 # Arah is a setup/orchestration toolkit. This Dockerfile provides a CLI
 # container for running arah scripts and managing the stack.
 # =============================================================================
-FROM alpine:3.19
+FROM alpine:3.24
 
 RUN apk add --no-cache \
     bash curl jq yq git openssh-client \
