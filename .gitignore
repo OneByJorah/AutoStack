@@ -21,3 +21,6 @@ build/
 # Logs
 *.log
 profiles/local/.env
+
+# OneByJorah portfolio tooling
+.venv-screenshot/
