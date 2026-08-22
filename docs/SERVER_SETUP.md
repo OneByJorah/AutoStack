@@ -14,7 +14,7 @@ cd AutoStack
 
 # 2. Environment
 cp .env.example .env
-# Edit .env: set SERVER_IP, HONCHO_TOKEN, HONCHO_DB_PASSWORD
+# Edit .env: set HOST_IP, HONCHO_TOKEN, HONCHO_DB_PASSWORD
 
 # 3. Bring up the stack
 docker compose up -d
@@ -30,7 +30,7 @@ docker compose up -d
 
 | Variable | Purpose | Notes |
 |---|---|---|
-| `SERVER_IP` | Tailscale or local IP used in docs/examples | Required |
+| `HOST_IP` | Tailscale or local IP used in docs/examples | Required |
 | `HONCHO_TOKEN` | Auth token for Honcho API | Optional |
 | `HONCHO_DB_PASSWORD` | Postgres password for Honcho backend | Required |
 | `POSTGRES_PASSWORD` | Postgres password | Required |
@@ -81,7 +81,7 @@ docker compose logs -f
 ## Troubleshooting
 
 - If services fail to start, inspect `docker compose up -d && docker compose logs -f`.
-- Ensure `SERVER_IP` matches the host address used by other clients (Tailscale recommended).
+- Ensure `HOST_IP` matches the host address used by other clients (Tailscale recommended).
 
 ---
 

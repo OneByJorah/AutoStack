@@ -18,6 +18,9 @@ if [ -z "${mode:-}" ]; then
 fi
 
 profile="$REPO_ROOT/profiles/$mode/.env"
+if [ ! -f "$profile" ] && [ -f "$REPO_ROOT/profiles/$mode/.env.example" ]; then
+  profile="$REPO_ROOT/profiles/$mode/.env.example"
+fi
 if [ -f "$profile" ]; then
   cp "$profile" "$REPO_ROOT/.env"
   echo "Applied profile .env from $profile"
@@ -72,4 +75,4 @@ sudo docker compose up -d
 echo "Running healthcheck..."
 bash "$REPO_ROOT/scripts/healthcheck.sh" || true
 
-echo "arah setup applied: mode=$mode"
+echo "AutoStack setup applied: mode=$mode"

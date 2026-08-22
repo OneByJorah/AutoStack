@@ -2,6 +2,11 @@
 
 Honcho provides long-term memory/workspace context for Hermes Agent.
 
+## Two variants
+
+- **Core (default):** the main `docker-compose.yml` runs a prebuilt `honcho` container on **port 8081** (`ghcr.io/onebyjorah/honcho`).
+- **Overlay (this doc):** `docker-compose.honcho.yml` builds upstream Honcho from `vendor/honcho` plus Postgres + Redis on **port 8000**. Pick one; do not run both.
+
 ## Prerequisites
 
 - Docker Engine + Compose v2+

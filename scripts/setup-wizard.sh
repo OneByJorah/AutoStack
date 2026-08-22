@@ -3,7 +3,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-echo "=== arah setup wizard ==="
+echo "=== AutoStack setup wizard ==="
 echo "Select stack access mode:"
 echo "  1) local      (host networking, no tunnels)"
 echo "  2) tailscale  (Tailscale-only access)"
@@ -20,12 +20,16 @@ case "$choice" in
 esac
 
 PROFILE_DIR="$REPO_ROOT/profiles/$MODE"
-if [ ! -f "$PROFILE_DIR/.env" ]; then
-  echo "Profile not found: $PROFILE_DIR/.env"
+if [ -f "$PROFILE_DIR/.env" ]; then
+  PROFILE_ENV="$PROFILE_DIR/.env"
+elif [ -f "$PROFILE_DIR/.env.example" ]; then
+  PROFILE_ENV="$PROFILE_DIR/.env.example"
+else
+  echo "Profile not found: $PROFILE_DIR"
   exit 1
 fi
 
-cp "$PROFILE_DIR/.env" "$REPO_ROOT/.env"
+cp "$PROFILE_ENV" "$REPO_ROOT/.env"
 echo "Applied profile: $MODE"
 
 # Optional token/secret prompts
@@ -35,8 +39,7 @@ read -rp "Enter Cloudflare Tunnel hostname (required for cloudflare/all): " CF_H
 read -rp "Enter Cloudflare Tunnel name: " CF_TUNNEL
 
 if [ -n "$HONCHO_KEY" ]; then
-  mkdir -p "$REPO_ROOT/honcho"
-  echo "HONCHO_TOKEN=$HONCHO_KEY" >> "$REPO_ROOT/honcho/.env.honcho"
+  echo "HONCHO_TOKEN=$HONCHO_KEY" >> "$REPO_ROOT/.env.honcho"
 fi
 if [ -n "$LLM_KEY" ]; then
   echo "LLM_API_KEY=$LLM_KEY" >> "$REPO_ROOT/.env"

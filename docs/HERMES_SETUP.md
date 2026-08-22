@@ -9,7 +9,7 @@ cd AutoStack
 
 # 2. Environment
 cp .env.example .env
-# Edit .env: set SERVER_IP, HONCHO_TOKEN, HONCHO_DB_PASSWORD
+# Edit .env: set HOST_IP, HONCHO_TOKEN, HONCHO_DB_PASSWORD
 
 # 3. Start the stack
 bash scripts/bootstrap.sh
@@ -31,14 +31,14 @@ model:
 
 web:
   backend: searxng
-  searxng_url: http://<SERVER_IP>:8080
+  searxng_url: http://<HOST_IP>:8080
 
 browser:
-  cdp_url: http://<SERVER_IP>:9222
+  cdp_url: http://<HOST_IP>:9222
 
 honcho:
   enabled: true
-  base_url: "http://<SERVER_IP>:8081"
+  base_url: "http://<HOST_IP>:8081"
   workspace: hermes-main
 
 obsidian:

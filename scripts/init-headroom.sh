@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -9,5 +10,7 @@ if [ ! -f "${REPO_DIR}/.env.headroom" ]; then
 fi
 
 echo "Headroom init complete."
-echo "Edit .env.headroom, especially NEO4J_AUTH, before first start."
+echo "Edit .env.headroom (proxy settings)."
+echo "NOTE: NEO4J_AUTH is interpolated by docker-compose.headroom.yml from the root .env —"
+echo "      add 'NEO4J_AUTH=neo4j/<password>' there before first start."
 echo "Start: docker compose -f docker-compose.yml -f docker-compose.headroom.yml up -d"

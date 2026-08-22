@@ -25,3 +25,5 @@ We will respond within 72 hours and coordinate disclosure.
 - Keep Tailscale/WireGuard as the preferred exposure model.
 - Rotate secrets and API keys regularly.
 - Bind services to localhost unless a reverse proxy handles TLS.
+- Change the default SearXNG `secret_key` in `searxng/settings.yml` before exposing port 8080 to a LAN/Tailnet.
+- Set real values for all `change_me_*` placeholders in `.env` before exposing any service.

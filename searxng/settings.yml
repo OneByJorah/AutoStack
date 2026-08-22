@@ -2,6 +2,8 @@ use_default_settings: true
 server:
   bind_address: "0.0.0.0"
   port: 8080
+  # CHANGE THIS before exposing SearXNG beyond localhost (e.g. `openssl rand -hex 32`).
+  # A static committed secret allows session/cookie forgery on reachable instances.
   secret_key: "stackdeploy-searxng"
   public_instance: false
 search:

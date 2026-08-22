@@ -22,8 +22,8 @@ bash scripts/init-headroom.sh
 | Service | Port | Notes |
 |---------|------|-------|
 | Headroom proxy | `8787` | OpenAI-compatible proxy + readz `/readyz` |
-| Qdrant | `6333` / `6334` | Vector REST/gRPC |
-| Neo4j | `7474` / `7687` | Browser + Bolt |
+| Qdrant | `5333` / `5334` (localhost only) | Vector REST/gRPC |
+| Neo4j | `7474` / `7687` (localhost only) | Browser + Bolt |
 
 ## Hermes config hints
 

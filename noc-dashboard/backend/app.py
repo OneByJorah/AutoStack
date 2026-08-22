@@ -256,6 +256,8 @@ if os.getenv("ENABLE_SETUP_API", "0").lower() in ("1", "true", "yes", "on"):
             return {"ok": False, "error": "Invalid mode"}
 
         profile = REPO_ROOT / "profiles" / mode / ".env"
+        if not profile.exists() and (REPO_ROOT / "profiles" / mode / ".env.example").exists():
+            profile = REPO_ROOT / "profiles" / mode / ".env.example"
         if not profile.exists():
             return {"ok": False, "error": f"Missing profile: {profile}"}
 
