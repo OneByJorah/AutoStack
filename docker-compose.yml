@@ -20,7 +20,7 @@ services:
     container_name: qdrant
     restart: unless-stopped
     ports:
-      - "${QDRANT_BIND:-127.0.0.1}:6333:6333"
+      - "${QDRANT_BIND:-<ip-address>}:6333:6333"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:6333/"]
       interval: 30s
@@ -59,7 +59,7 @@ services:
     restart: unless-stopped
     ports:
       - "4444:4444"
-      - "${SELENIUM_VNC_BIND:-127.0.0.1}:5900:5900"
+      - "${SELENIUM_VNC_BIND:-<ip-address>}:5900:5900"
     shm_size: "2g"
     environment:
       - SE_NO_SANDBOX=1
