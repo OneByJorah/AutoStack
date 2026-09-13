@@ -4,10 +4,14 @@
 
 # AutoStack
 
-Production-ready Docker Compose stack for self-hosted AI agents
+**Production-ready Docker Compose stack for self-hosted AI agents** — SearXNG, Qdrant, Honcho, Playwright, one command deploy.
 
-![License](https://img.shields.io/badge/license-MIT-brightgreen)
-![Language](https://img.shields.io/badge/language-JavaScript-blue)
+[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](LICENSE)
+[![Docker](https://img.shields.io/badge/Docker_Compose-Ready-2496ED?logo=docker&logoColor=fff)](https://docker.com)
+[![CPU](https://img.shields.io/badge/CPU--Only-No%20GPU%20Required-brightgreen)]()
+[![Privacy](https://img.shields.io/badge/Privacy-Self--Hosted-blue)]()
+[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen)](CONTRIBUTING.md)
+
 </div>
 
 ---
@@ -16,90 +20,70 @@ Production-ready Docker Compose stack for self-hosted AI agents
   <img src="docs/screenshots/noc-dashboard-full.png" alt="AutoStack NOC dashboard preview" width="90%">
 </p>
 
-<br>
-
 ---
 
-## Features
+## What It Does
 
-- **One Command Deploy** — `docker compose up -d` and you're ready.
-- **Search Engine** — SearXNG for private web search.
-- **Long-Term Memory** — Honcho for persistent agent memory.
-- **Browser Automation** — Selenium-based web automation (plus optional Camofox/CloakBrowser via [browser-search](browser-search/)).
-- **Vector Storage** — Qdrant for embeddings.
-- **Privacy-Focused** — All data stays on your infrastructure.
-- **CPU-Only** — No GPU required.
-- **Production Ready** — Health checks and monitoring.
+AutoStack is a **one-command AI infrastructure stack** that deploys SearXNG (private search), Qdrant (vector DB), Honcho (agent memory), and Selenium browser automation — all self-hosted, CPU-only, privacy-focused.
 
 ## Quick Start
 
 ```bash
 git clone https://github.com/OneByJorah/AutoStack.git
 cd AutoStack
-
 cp .env.example .env
 docker compose up -d
 ```
 
 ### Access Services
 
-| Service | URL |
-|---------|-----|
-| SearXNG | http://localhost:8080 |
-| Qdrant | http://localhost:6333 (loopback by default) |
-| Honcho API | http://localhost:8081 |
-| Obsidian (vault UI) | http://localhost:8083 |
-| WebAutomation (Selenium) | http://localhost:4444 |
+| Service | URL | Purpose |
+|---------|-----|---------|
+| **SearXNG** | http://localhost:8080 | Private web search |
+| **Qdrant** | http://localhost:6333 | Vector database |
+| **Honcho** | http://localhost:8081 | Agent memory |
+| **Obsidian** | http://localhost:8083 | Vault UI |
+| **Selenium** | http://localhost:4444 | Browser automation |
 
-Optional overlays add Portainer (`:9000`), Camofox (`:9377`), CloakBrowser CDP (`:9222`), Headroom (`:8787`), and the NOC Dashboard (`:9500`). See `docs/` and the `docker-compose.*.yml` overlay files.
+## Features
+
+- **One Command Deploy** — docker compose up -d and you're ready
+- **Private Search** — SearXNG with 100+ providers, no tracking
+- **Agent Memory** — Honcho for persistent long-term memory
+- **Browser Automation** — Selenium + optional Camofox stealth browser
+- **Vector Storage** — Qdrant for embeddings and semantic search
+- **Privacy-Focused** — All data stays on your infrastructure
+- **CPU-Only** — No GPU required
+- **Production Ready** — Health checks, monitoring, restart policies
 
 ## Stack Components
 
-| Component | Purpose |
-|-----------|---------|
-| **SearXNG** | Privacy web search |
-| **Qdrant** | Vector database |
-| **Honcho** | Long-term memory (Postgres + Redis ship in the optional Honcho overlay) |
-| **WebAutomation** | Selenium/Chrome browser automation |
-| **Obsidian** | Caddy-served vault UI |
+| Component | Purpose | Port |
+|-----------|---------|------|
+| **SearXNG** | Privacy web search engine | :8080 |
+| **Qdrant** | Vector database for embeddings | :6333 |
+| **Honcho** | Long-term agent memory | :8081 |
+| **Selenium** | Chrome browser automation | :4444 |
+| **Obsidian** | Caddy-served vault UI | :8083 |
 
 ## Configuration
 
-Key variables from `.env.example`:
-
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `HOST_IP` | `127.0.0.1` | Host IP used by Cloudflare Tunnel ingress and docs |
-| `HONCHO_IMAGE` | `ghcr.io/onebyjorah/honcho:latest` | Honcho image |
-| `HONCHO_DB_PASSWORD` | placeholder | Honcho Postgres password (Honcho overlay) |
-| `OBSIDIAN_VAULT_PATH` | `/opt/autostack/ObsidianVault` | Host path to the Obsidian vault (compose fallback: `./obsidian`) |
-| `QDRANT_BIND` | `127.0.0.1` | Bind address for the Qdrant port |
-| `SELENIUM_VNC_BIND` | `127.0.0.1` | Bind address for the Selenium VNC port |
+| HOST_IP | 127.0.0.1 | Host IP for tunnel ingress |
+| QDRANT_BIND | 127.0.0.1 | Qdrant bind address |
+| OBSIDIAN_VAULT_PATH | /opt/autostack/ObsidianVault | Vault host path |
 
-## Project Structure
+## Use Cases
 
-```
-AutoStack/
-├── docker-compose.yml       # Main compose file (+ docker-compose.*.yml overlays)
-├── .env.example             # Environment template
-├── scripts/
-│   ├── bootstrap.sh         # One-command deploy helper
-│   ├── setup-wizard.sh      # Access-mode wizard
-│   └── healthcheck.sh       # Service health checks
-└── README.md
-```
-
-## Contributing
-
-Contributions are welcome. Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for community standards.
-
-## Security
-
-For security concerns, see [SECURITY.md](SECURITY.md). Found a vulnerability? Report privately to `security@jorahone.com` — do not use public issues.
+1. **AI Developers** — Quick local stack for building AI agents
+2. **Privacy Advocates** — Self-hosted alternative to cloud AI
+3. **Researchers** — Experiment with RAG and vector search
+4. **MSPs** — Deploy AI capabilities for internal tools
 
 ## License
 
-[MIT License](LICENSE) © Jhonattan L. Jimenez (OneByJorah)
+MIT © Jhonattan L. Jimenez (OneByJorah)
 
 ---
 
